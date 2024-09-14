@@ -7,8 +7,6 @@ import Script from 'next/script';
 import "./globals.css";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/Footer";
-import WhatsappFloatingButton from "@/components/WhatsappButton/WhatsappFloatingButton"
-// import TawkMessenger from '@/components/TawkMessenger/TawkMessenger';
 import './styles/custom-bootstrap.scss'
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,38 +31,9 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={inter.className}>
         <Navbar /> 
-        {/* <nav class="navbar navbar-expand-lg navbar-light bg-transparent fixed-top">
-          <div class="container-fluid d-flex justify-content-between">
-            <Image src="/images/logo.png" alt="logo" className="logo-fluid pt-4" width={126} height={175} />
-            <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link text-info" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-info" href="/about">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-info" href="/services">Services</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-info" href="/contact">Contact</a>
-                </li>
-                {/* <li class="nav-item">
-                  <a class="nav-link text-info" href="/blog" tabindex="-1" aria-disabled="true">Blog</a>
-                </li> 
-              </ul>
-            </div>
-          </div>
-        </nav> */}
 
         {children}
-
-        {/* <TawkMessenger /> */}
-        <WhatsappFloatingButton />
+        
         <Footer />
         {/* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>*/}
         <Script

@@ -17,13 +17,13 @@ const Navbar = () => {
             <li className="nav-item">
               <a className="nav-link text-light" href="/about">About Us</a>
             </li> 
-            <li className="nav-item">
-              <a className="nav-link text-light" href="/services">Services</a>
-            </li>
+            {/* <li className="nav-item">
+              <a className="nav-link text-light" href="/signin">Login</a>
+            </li>  */}
           </ul>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link text-light contact" href="/contact">Contact us</a>
+              <a className="nav-link text-light contact" href="/signin">Sign In</a>
             </li>
           </ul>
         </div>
