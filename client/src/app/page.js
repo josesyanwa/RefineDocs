@@ -32,10 +32,10 @@ const Home = () => {
             <div className="col-lg-6 order-lg-2 mb-5 mb-lg-0">
               <div className="image-stack mb-5 mb-lg-0">
                 <div className="image-stack__item image-stack__item--bottom" data-aos="fade-up">
-                  <Image src="/images/moran.jpeg" alt="Image" className="img-fluid rellax" width={600} height={400} />
+                  <Image src="/images/refinedocs-5.jpeg" alt="Image" className="img-fluid rellax" width={600} height={400} />
                 </div>
                 <div className="image-stack__item image-stack__item--top" data-aos="fade-up" data-aos-delay="100" data-rellax-percentage="0.5">
-                  <Image src="/images/img_v_2.jpeg" alt="Image" className="img-fluid" width={600} height={400} />
+                  <Image src="/images/refinedocs-4.jpeg" alt="Image" className="img-fluid" width={600} height={400} />
                 </div>
               </div>
             </div>

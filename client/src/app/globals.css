@@ -15655,9 +15655,8 @@ textarea {
 }
 
 .custom-blur {
-  background-color: rgba(65, 65, 63, 0.9); 
-  /* background-color: #41413F;  */
-  /* backdrop-filter: blur(10px);            */
+  background-color: rgba(66, 66, 68, 0.7); 
+  /* backdrop-filter: blur(10px);     #424244       */
   position: fixed;                      
   width: 100%;                          
   top: 0;        
@@ -15744,3 +15743,34 @@ textarea {
 
 
 
+/* Upload button styling */
+.upload-button {
+  display: inline-block;
+  font-size: 16px;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 8px; /* Rounded corners */
+  border: none; /* Remove default border */
+  background-color: #f89f21; /* Default blue color */
+  color: #ffffff; /* White text */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover state */
+.upload-button:hover {
+  background-color: #e07b1e; /* Darker shade of blue on hover */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Slight shadow on hover */
+}
+
+/* Active state */
+.upload-button:active {
+  background-color: #e07b1e; /* Even darker shade when active */
+  box-shadow: none; /* Remove shadow on active click */
+}
+
+
+.mt-44 {
+  margin-top: 2.75rem; /* Equivalent to about 44px */
+}
