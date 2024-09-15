@@ -1,0 +1,129 @@
+/* pages/signin.module.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    padding: 1rem;
+    margin-top: 70px; 
+  }
+  
+  .form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 360px;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: #333;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  
+  .inputGroup label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .inputGroup input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .inputGroup input:focus {
+    border-color: #f89f21;
+  }
+  
+  .signupText {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #666;
+  }
+  
+  .signupLink {
+    color: #f89f21;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .signupLink:hover {
+    text-decoration: underline;
+  }
+  
+  .button {
+    background-color: #f89f21;
+    color: #ffffff;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #e07b1e;
+  }
+  
+  /* .button:active {
+    background-color: #003d80;
+  } */
+  
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    .form {
+      padding: 1.5rem;
+    }
+  
+    .title {
+      font-size: 1.6rem;
+    }
+  
+    .inputGroup input {
+      padding: 0.7rem;
+    }
+  
+    .button {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form {
+      padding: 1rem;
+    }
+  
+    .title {
+      font-size: 1.4rem;
+    }
+  
+    .inputGroup input {
+      padding: 0.6rem;
+    }
+  
+    .button {
+      padding: 0.4rem;
+      font-size: 0.85rem;
+    }
+  }
+  

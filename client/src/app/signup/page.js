@@ -1,13 +1,13 @@
-// pages/signin.js
+// pages/SignUp.js
 import React from 'react';
 import Link from 'next/link';
-import styles from './signin.module.css';
+import styles from './SignUp.module.css';
 
-const SignIn = () => {
+const SignUp = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form}>
-        <h2 className={styles.title}>Sign In</h2>
+        <h2 className={styles.title}>Sign Up</h2>
         <div className={styles.inputGroup}>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" required />
@@ -19,16 +19,16 @@ const SignIn = () => {
 
         {/* Add the "Don't have an account? Sign up" message */}
         <p className={styles.signupText}>
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className={styles.signupLink}>
-            Sign up
+          Already have an account?{' '}
+          <Link href="/signin" className={styles.signupLink}>
+            Sign in
           </Link>
         </p>
 
-        <button type="submit" className={styles.button}>Sign In</button>
+        <button type="submit" className={styles.button}>Sign up</button>
       </form>
     </div>
   );
 };
 
-export default SignIn;
+export default SignUp;

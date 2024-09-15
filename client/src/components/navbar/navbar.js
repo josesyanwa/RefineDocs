@@ -23,7 +23,7 @@ const Navbar = () => {
           </ul>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link text-light contact" href="/signin">Sign In</a>
+              <a className="nav-link text-light contact" href="/signin"> Sign In </a>
             </li>
           </ul>
         </div>
