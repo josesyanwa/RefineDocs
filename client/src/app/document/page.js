@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import DocumentUpload from '@/components/DocumentUpload/DocumentUpload';
+import DocumentViewer from '@/components/DocumentViewer/DocumentViewer';
 
 const Document = () => {
   return (
@@ -23,6 +24,7 @@ const Document = () => {
       </div>
 
       <DocumentUpload/>
+      <DocumentViewer/>
 
 
     </>

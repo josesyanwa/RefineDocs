@@ -1,5 +1,5 @@
 // components/DocumentUpload.js
-"use client"; // This ensures the component is treated as a client-side component
+"use client"; 
 
 import { useState } from 'react';
 import Image from 'next/image';
