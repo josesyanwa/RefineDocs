@@ -16,8 +16,8 @@ const Home = () => {
         <div className="container">
           <div className="row align-items-center justify-content-start">
             <div className="col-lg-5">
-              <h1 className="headings" data-aos="fade-up">It is a Big World Out There, Go Explore</h1>
-              <p className="mb-5" data-aos="fade-up">Welcome to CAWA Tours and Travels, your gateway to discovering the enchanting beauty of Kenya. Based in the heart of East Africa, we specialize in offering exceptional hotel booking services tailored for international tourists.</p>
+              <h1 className="headings" data-aos="fade-up">Transform Your Writing with AI Precision</h1>
+              <p className="mb-5" data-aos="fade-up">RefineDocs is an AI-powered document assistant that helps you improve your writing by providing smart suggestions for clarity, grammar, and style.</p>
 
             </div>
           </div>
@@ -41,10 +41,10 @@ const Home = () => {
             </div>
             <div className="col-lg-4 order-lg-1">
               <div>
-                <h2 className="heading mb-3" data-aos="fade-up" data-aos-delay="100">Explore Kenya with CAWA Kenya Tours & Travels</h2>
+                <h2 className="heading mb-3" data-aos="fade-up" data-aos-delay="100">Elevate Your Words with RefineDocs</h2>
                 
-                <p data-aos="fade-up" data-aos-delay="200">At CAWA Kenya Tours, we offer exceptional travel experiences throughout Kenya, including exciting Maasai Mara safaris and luxurious safari packages. Our tailored travel options range from wildlife tours to relaxing beach holidays, ensuring memorable adventures with expert guidance.</p>
-                <p data-aos="fade-up" data-aos-delay="300">Explore the best of Kenya, from national parks and cultural tours to thrilling adventure experiences. Trust CAWA Kenya Tours to deliver an unforgettable journey blending culture, adventure, and relaxation.</p>
+                <p data-aos="fade-up" data-aos-delay="200">RefineDocs is your AI-powered assistant designed to enhance and refine your documents with ease. Whether you need to improve grammar, clarity, or style, RefineDocs uses advanced natural language processing (NLP) to analyze your content and offer intelligent suggestions.</p>
+                <p data-aos="fade-up" data-aos-delay="300">With an intuitive interface and real-time editing tools, you can elevate your writing to a professional standard, all while staying in control. Upload, edit, and export your documents effortlessly, using a seamless workflow tailored to your needs.</p>
 
               </div>
             </div>

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DocumentUpload from '@/components/DocumentUpload/DocumentUpload';
 import DocumentViewer from '@/components/DocumentViewer/DocumentViewer';
+import SuggestionInterface from '@/components/SuggestionInterface/SuggestionInterface';
 
 const Document = () => {
   return (
@@ -14,8 +15,8 @@ const Document = () => {
         <div className="container">
           <div className="row align-items-center justify-content-start">
             <div className="col-lg-5">
-              <h1 className="headings" data-aos="fade-up">Document Us</h1>
-              <p className="mb-5" data-aos="fade-up">Discover the world with CAWA Tours and Travels! At CAWA, we specialize in creating unforgettable travel experiences tailored just for you.</p>
+              <h1 className="headings" data-aos="fade-up">Upload & View Documents</h1>
+              <p className="mb-5" data-aos="fade-up">Refine. Improve. Perfect Your Documents Using RefineDocs</p>
               
                                                           
             </div>
@@ -25,6 +26,7 @@ const Document = () => {
 
       <DocumentUpload/>
       <DocumentViewer/>
+      <SuggestionInterface/>
 
 
     </>

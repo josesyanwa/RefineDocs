@@ -13,7 +13,7 @@ const DocumentViewer = () => {
           {/* Heading section */}
           <div className="col-lg-3 mb-4 mb-lg-0">
             <div className="heading-content" data-aos="fade-up">
-              <h2>Document <span className="d-block">Viewer</span></h2>
+              <h2>View <span className="d-block">Document</span></h2>
               <p>Compare the original document with its improved version side by side.</p>
             </div>
           </div>
