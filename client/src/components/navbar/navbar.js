@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light custom-blur fixed-top">
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <Image src="/images/logo.png" alt="logo" className="logo-fluid" width={130} height={40} />
+        <Image src="/images/logo.png" alt="logo" className="logo-fluid" width={110} height={30} />
         <button className="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
