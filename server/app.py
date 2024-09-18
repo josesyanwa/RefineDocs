@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -6,11 +7,18 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from flask_restful import Api, Resource
 from datetime import timedelta
 from sqlalchemy import func
+from datetime import datetime, timezone
+from werkzeug.utils import secure_filename
+import spacy
+import PyPDF2
+import docx
+
 
 from models import db, User, Document, Suggestion, DocumentHistory
 
 # Initialize the Flask app
 app = Flask(__name__)
+
 
 # Configure the app for SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///refinedocs.db'  # Using SQLite
@@ -114,6 +122,122 @@ def logout_user():
         200
     )
     return response
+
+
+# EXTRACT FILE
+
+def extract_text(filepath):
+    _, file_extension = os.path.splitext(filepath)
+
+    if file_extension.lower() == '.txt':
+        with open(filepath, 'r') as file:
+            return file.read()
+    elif file_extension.lower() == '.pdf':
+        with open(filepath, 'rb') as file:
+            reader = PyPDF2.PdfReader(file)
+            text = ''
+            for page_num in range(len(reader.pages)):
+                text += reader.pages[page_num].extract_text()
+            return text
+    elif file_extension.lower() == '.docx':
+        doc = docx.Document(filepath)
+        return '\n'.join([para.text for para in doc.paragraphs])
+    else:
+        raise ValueError(f"Unsupported file type: {file_extension}")
+
+
+# IMPROVE DOCUMENTS.
+
+def improve_document(original_content):
+    # Load the spaCy NLP model
+    nlp = spacy.load("en_core_web_sm")
+    
+    # Process the text through the NLP pipeline
+    doc = nlp(original_content)
+    
+    # Improve the document content (for simplicity, this example returns the original)
+    improved_content = original_content
+    
+    # Example of extracting suggestions
+    suggestions = []
+    for token in doc:
+        if token.is_stop:
+            suggestions.append(f"Consider removing stopword: {token.text}")
+        elif token.is_alpha and len(token.text) > 6:  # Example of a rule to improve word usage
+            suggestions.append(f"Try simplifying: {token.text}")
+    
+    return improved_content, suggestions
+
+
+# POST DOCUMENT
+
+UPLOAD_FOLDER = 'assets'
+ALLOWED_EXTENSIONS = {'txt', 'docx', 'pdf'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/documents/upload', methods=['POST'])
+@jwt_required()
+def upload_document():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file selected'}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        # Extract text from the uploaded document (based on the file type)
+        original_content = extract_text(filepath)
+
+        # Process the document with spaCy to improve it
+        improved_content, suggestions = improve_document(original_content)
+
+        # Create a new Document object and save it in the database
+        new_document = Document(
+            user_id=user.id,
+            upload_date=datetime.now(timezone.utc),
+            original_content=original_content,
+            improved_content=improved_content
+        )
+
+        db.session.add(new_document)
+        db.session.commit()
+
+        # Add each suggestion to the suggestions table
+        for suggestion_text in suggestions:
+            new_suggestion = Suggestion(
+                document_id=new_document.id,
+                suggestion_text=suggestion_text,
+                is_accepted=False  # Default to not accepted
+            )
+            db.session.add(new_suggestion)
+
+        db.session.commit()
+
+        return jsonify({
+            'message': 'Document uploaded and processed successfully',
+            'original_content': original_content,
+            'improved_content': improved_content,
+            'suggestions': suggestions
+        }), 201
+
+    return jsonify({'error': 'Invalid file format'}), 400
+
 
 # Run the app
 if __name__ == '__main__':

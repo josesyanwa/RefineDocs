@@ -31,6 +31,9 @@ flask-restful = "*"
 flask-jwt-extended = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+spacy = "*"
+pypdf2 = "*"
+python-docx = "*"
 
 [dev-packages]
 
