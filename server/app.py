@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 import spacy
 import PyPDF2
 import docx
+from flask import jsonify
 
 
 from models import db, User, Document, Suggestion, DocumentHistory
@@ -237,6 +238,106 @@ def upload_document():
         }), 201
 
     return jsonify({'error': 'Invalid file format'}), 400
+
+
+# FETCH DOCUMENT
+
+@app.route('/documents/latest', methods=['GET'])
+@jwt_required()  # Ensure the user is authenticated
+def get_latest_document():
+    user_id = get_jwt_identity()  # Get the current user's ID from the JWT token
+    
+    # Fetch the most recent document for the user
+    latest_document = Document.query.filter_by(user_id=user_id).order_by(Document.upload_date.desc()).first()
+    
+    if not latest_document:
+        return jsonify({'error': 'No documents found for this user'}), 404
+
+    # Serialize the document data
+    document_data = {
+        'original_content': latest_document.original_content,
+        'improved_content': latest_document.improved_content,
+        # 'upload_date': latest_document.upload_date.isoformat()  
+    }
+
+    return jsonify({'latest_document': document_data}), 200
+
+
+# FETCH SUGGESTION
+
+@app.route('/documents/<int:document_id>/suggestions', methods=['GET'])
+@jwt_required()
+def get_document_suggestions(document_id):
+    # Check if the document exists
+    document = Document.query.get(document_id)
+
+    if not document:
+        return jsonify({'error': 'Document not found'}), 404
+
+    # Fetch all suggestions for the given document
+    suggestions = Suggestion.query.filter_by(document_id=document_id).all()
+
+    if not suggestions:
+        return jsonify({'message': 'No suggestions found for this document'}), 404
+
+    # Manually serialize suggestions using to_dict method
+    suggestions_data = [suggestion.to_dict() for suggestion in suggestions]
+
+    return jsonify({
+        'document_id': document_id,
+        'suggestions': suggestions_data
+    }), 200
+
+
+# ACCEPT SUGGESTION
+
+@app.route('/suggestions/accept/<int:suggestion_id>', methods=['POST'])
+@jwt_required()
+def accept_suggestion(suggestion_id):
+    # Get the suggestion
+    suggestion = Suggestion.query.get(suggestion_id)
+
+    if not suggestion:
+        return jsonify({'error': 'Suggestion not found'}), 404
+
+    # Find the related document
+    document = Document.query.get(suggestion.document_id)
+    if not document:
+        return jsonify({'error': 'Document not found'}), 404
+
+    # Modify the improved_content by applying the suggestion
+    # This can vary based on how suggestions modify the text. Here, we'll append the suggestion text to the document content as an example.
+    document.improved_content += f"\n{suggestion.suggestion_text}"
+
+    # Mark the suggestion as accepted
+    suggestion.is_accepted = True
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Suggestion accepted and applied to the document',
+        'improved_content': document.improved_content
+    }), 200
+
+
+# DENY SUGGESTION
+
+@app.route('/suggestions/deny/<int:suggestion_id>', methods=['DELETE'])
+@jwt_required()
+def deny_suggestion(suggestion_id):
+    # Get the suggestion
+    suggestion = Suggestion.query.get(suggestion_id)
+
+    if not suggestion:
+        return jsonify({'error': 'Suggestion not found'}), 404
+
+    # Delete the suggestion
+    db.session.delete(suggestion)
+    db.session.commit()
+
+    return jsonify({'message': 'Suggestion denied and deleted'}), 200
+
 
 
 # Run the app

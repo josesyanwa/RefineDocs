@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 class Document(db.Model, SerializerMixin):
     __tablename__ = 'documents'
 
+    serialize_rules = ('-suggestions_relation.document', '-history.document')
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     upload_date = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
