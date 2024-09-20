@@ -13,6 +13,10 @@ const SignUp = () => {
           <input type="text" id="name" name="name" required />
         </div>
         <div className={styles.inputGroup}>
+          <label htmlFor="email">Email</label>
+          <input type="text" id="email" name="email" required />
+        </div>
+        <div className={styles.inputGroup}>
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" required />
         </div>
