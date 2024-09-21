@@ -13,12 +13,15 @@ import spacy
 import PyPDF2
 import docx
 from flask import jsonify
+from flask_cors import CORS
 
 
 from models import db, User, Document, Suggestion, DocumentHistory
 
 # Initialize the Flask app
 app = Flask(__name__)
+
+CORS(app) 
 
 
 # Configure the app for SQLite
