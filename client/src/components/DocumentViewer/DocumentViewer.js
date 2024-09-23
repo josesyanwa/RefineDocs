@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from 'react';
+import SuggestionInterface from "@/components/SuggestionInterface/SuggestionInterface"; // Import your SuggestionInterface
 
 const DocumentViewer = () => {
   const [originalDocument, setOriginalDocument] = useState("");
   const [improvedDocument, setImprovedDocument] = useState("");
+  const [documentId, setDocumentId] = useState(null); // State to hold document ID
   const [error, setError] = useState(null);
 
   // Fetch the latest document on component mount
@@ -29,6 +31,11 @@ const DocumentViewer = () => {
   
         setOriginalDocument(data.latest_document.original_content);
         setImprovedDocument(data.latest_document.improved_content);
+        setDocumentId(data.latest_document.id); // Set the document ID
+
+        // Print documentId to the console
+        console.log("Document ID:", data.latest_document.id); // Log document ID
+        
       } catch (err) {
         setError(err.message);
       }
@@ -71,6 +78,8 @@ const DocumentViewer = () => {
             </div>
           </div>
         </div>
+        {/* Render SuggestionInterface and pass documentId */}
+        {documentId && <SuggestionInterface documentId={documentId} />}
       </div>
     </div>
   );

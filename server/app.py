@@ -258,6 +258,7 @@ def get_latest_document():
 
     # Serialize the document data
     document_data = {
+        'id': latest_document.id, 
         'original_content': latest_document.original_content,
         'improved_content': latest_document.improved_content,
         # 'upload_date': latest_document.upload_date.isoformat()  
