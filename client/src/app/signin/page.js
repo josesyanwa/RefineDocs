@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // for navigation after successful signin
+import Cookies from 'js-cookie';  // Import js-cookie to store the JWT
 import styles from './signin.module.css';
 
 const SignIn = () => {
@@ -20,16 +21,17 @@ const SignIn = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
+  
     const { email, password } = userFormData;
-
+  
+    // Ensure both fields are filled in
     if (!password) {
       setErrorMessage('Password is required');
       return;
     }
-
-    // Sending a POST request to your Flask backend
-    fetch('/api/signin', {
+  
+    // Sending a POST request to your Next.js API route
+    fetch('http://127.0.0.1:5555/users/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,22 +39,27 @@ const SignIn = () => {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => {
+        console.log('Raw response:', response);
         if (!response.ok) {
           throw new Error('Invalid email or password');
         }
         return response.json();
       })
-      .then((data) => {
-        setErrorMessage(''); // clear error message on successful login
-        console.log('User signed in successfully:', data);
-        // Navigate to document after successful sign-in
-        router.push('/document');
+      .then((user) => {
+        localStorage.setItem("JWT",user.access_token)
+        
+        console.log('Token set in cookies and localStorage:', user.access_token);
+          
+        setErrorMessage('');  // Clear error message on success
+        router.push('/document');  // Navigate to the document page
+
       })
       .catch((error) => {
         console.error('Error signing in:', error.message);
         setErrorMessage('Invalid email or password');
       });
   };
+  
 
   return (
     <div className={styles.container}>

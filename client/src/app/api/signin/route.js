@@ -1,13 +1,11 @@
-// File: src/app/api/signin/route.js
-
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
-    // Parse incoming JSON data from the request
     const data = await req.json();
+    console.log('Received signin data:', data); // Debug log
 
-    // Send the signin data to your Flask backend
+    // Send signin data to your Flask backend
     const response = await fetch('http://127.0.0.1:5555/users/signin', {
       method: 'POST',
       headers: {
@@ -16,21 +14,26 @@ export async function POST(req) {
       body: JSON.stringify(data),
     });
 
-    // Check if the response from the Flask backend is not OK (e.g., wrong credentials)
+    console.log('Flask response status:', response.status); // Debug log
+
     if (!response.ok) {
       if (response.status === 401) {
         return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
       }
-      throw new Error('Error signing in: ' + response.status);
+      throw new Error(`Error signing in: ${response.status}`);
     }
 
-    // Parse the successful response from the backend
     const result = await response.json();
+    console.log('Flask response data:', result); // Debug log
 
-    // Return success response to the client
-    return NextResponse.json({ success: true, data: result });
+    // Check if token exists
+    if (!result.token) {
+      throw new Error('Token not found in the response');
+    }
+
+    // Return the JWT token in the response
+    return NextResponse.json({ success: true, token: result.token });
   } catch (error) {
-    // Handle any errors and return a 500 status with the error message
     console.error('Error signing in:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
