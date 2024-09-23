@@ -72,7 +72,7 @@ const DocumentUpload = () => {
                 Upload Your Document
               </h2>
               <p data-aos="fade-up" data-aos-delay="200">
-                Please upload any necessary documents using the button below. Supported formats include PDFs, Word documents, and images.
+                Please upload any necessary documents using the button below. Supported formats include PDFs and Word documents.
               </p>
 
               <div className="file-input" data-aos="fade-up" data-aos-delay="300">
@@ -80,7 +80,7 @@ const DocumentUpload = () => {
                   type="file"
                   onChange={handleFileChange}
                   className="form-control-file"
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  accept=".pdf,.doc,.docx,.txt"
                 />
               </div>
 

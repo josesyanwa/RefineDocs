@@ -48,7 +48,7 @@ const SignIn = () => {
       .then((user) => {
         localStorage.setItem("JWT",user.access_token)
         
-        console.log('Token set in cookies and localStorage:', user.access_token);
+        console.log('Token set in localStorage:', user.access_token);
           
         setErrorMessage('');  // Clear error message on success
         router.push('/document');  // Navigate to the document page
