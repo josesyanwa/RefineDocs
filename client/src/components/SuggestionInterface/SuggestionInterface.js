@@ -1,9 +1,10 @@
-"use client"; 
+"use client";
 import { useState } from 'react';
 
 const SuggestionInterface = ({ documentId }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false); // Track if suggestions are loaded
+  const [notification, setNotification] = useState(''); // State for the notification
 
   // Fetch suggestions from the API
   const fetchSuggestions = async () => {
@@ -25,24 +26,70 @@ const SuggestionInterface = ({ documentId }) => {
       setIsLoaded(true); // Mark that suggestions are loaded
     } catch (err) {
       console.error(err.message);
-      // Handle error if necessary
     }
   };
 
-  // Handle accept and reject actions
-  const handleAccept = (id) => {
-    console.log(`Accepted suggestion with id: ${id}`);
-    // Handle accept logic here
+  // Handle accept suggestion action
+  const handleAccept = async (id) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5555/suggestions/accept/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('JWT')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to accept suggestion');
+      }
+
+      const data = await response.json();
+      setNotification('Suggestion accepted'); // Display notification
+      setTimeout(() => setNotification(''), 3000); // Hide notification after 3 seconds
+
+      // Re-fetch suggestions to show updated list
+      fetchSuggestions();
+
+    } catch (err) {
+      console.error(err.message);
+      setNotification('Failed to accept suggestion');
+      setTimeout(() => setNotification(''), 3000); // Hide notification after 3 seconds
+    }
   };
 
-  const handleReject = (id) => {
-    console.log(`Rejected suggestion with id: ${id}`);
-    // Handle reject logic here
+  // Handle reject suggestion action
+  const handleReject = async (id) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5555/suggestions/deny/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('JWT')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to deny suggestion');
+      }
+
+      const data = await response.json();
+      setNotification('Suggestion denied'); // Display notification
+      setTimeout(() => setNotification(''), 3000); // Hide notification after 3 seconds
+
+      // Re-fetch suggestions to show updated list
+      fetchSuggestions();
+
+    } catch (err) {
+      console.error(err.message);
+      setNotification('Failed to deny suggestion');
+      setTimeout(() => setNotification(''), 3000); // Hide notification after 3 seconds
+    }
   };
 
   return (
     <>
-      {/* Hero Section (optional, similar to Blog Hero) */}
+      
       <div className="container">
         <div className="row align-items-center justify-content-start">
           <div className="col-lg-5">
@@ -51,6 +98,10 @@ const SuggestionInterface = ({ documentId }) => {
           </div>
         </div>
       </div>
+
+      {/* Notification message */}
+      {notification && <div className="alert alert-success">{notification}</div>}
+
 
       {/* Suggestions Section */}
       <div className="section">
