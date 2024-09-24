@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request, redirect, url_for, make_response
+from flask import Flask, jsonify, request, redirect, url_for, make_response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -12,8 +12,9 @@ from werkzeug.utils import secure_filename
 import spacy
 import PyPDF2
 import docx
-from flask import jsonify
 from flask_cors import CORS
+from docx import Document as DocxDocument
+import io
 
 
 from models import db, User, Document, Suggestion, DocumentHistory
@@ -342,6 +343,40 @@ def deny_suggestion(suggestion_id):
 
     return jsonify({'message': 'Suggestion denied and deleted'}), 200
 
+
+# EXPORT DOCUMENT
+
+
+@app.route('/export-document/<int:document_id>', methods=['GET'])
+@jwt_required()
+def export_document(document_id):
+    user_id = get_jwt_identity()  # Get the current user's ID from the JWT token
+    
+    # Fetch the document by ID and user
+    document = Document.query.filter_by(id=document_id, user_id=user_id).first()
+
+    if not document:
+        return jsonify({'error': 'Document not found'}), 404
+
+    # Create a new Word document using python-docx
+    doc = DocxDocument()
+
+    # Add content to the document (you can customize this)
+    doc.add_heading('Improved Document', 0)
+    doc.add_paragraph(document.improved_content)
+
+    # Save the document to a BytesIO stream
+    output_stream = io.BytesIO()
+    doc.save(output_stream)
+    output_stream.seek(0)
+
+    # Return the Word document as a downloadable file
+    return send_file(
+        output_stream,
+        as_attachment=True,
+        download_name="improved_document.docx",
+        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
 
 
 # Run the app
