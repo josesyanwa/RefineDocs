@@ -1,12 +1,12 @@
-"use client"; 
+"use client";
 
 import { useState } from 'react';
 import Image from 'next/image';
-// import { useCheckSession } from '../app/api/useCheckSession';  
 
 const DocumentUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // New state for success notification
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -17,9 +17,7 @@ const DocumentUpload = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      // Print the file details to the console
       console.log('Uploading file:', selectedFile);
-
 
       // Sending a POST request to your Flask backend with the JWT in the header
       fetch('http://127.0.0.1:5555/documents/upload', {
@@ -37,8 +35,12 @@ const DocumentUpload = () => {
         })
         .then((data) => {
           setErrorMessage(''); // Clear error message on successful upload
+          setSuccessMessage('Document uploaded and processed successfully'); // Show success notification
           console.log('Document uploaded successfully:', data);
-          alert(`Document uploaded: ${selectedFile.name}`);
+
+          // Clear the success message after 3 seconds
+          setTimeout(() => setSuccessMessage(''), 3000);
+
         })
         .catch((error) => {
           console.error('Error uploading document:', error.message);
@@ -71,9 +73,17 @@ const DocumentUpload = () => {
               <h2 className="heading mb-3" data-aos="fade-up" data-aos-delay="100">
                 Upload Your Document
               </h2>
+
               <p data-aos="fade-up" data-aos-delay="200">
                 Please upload any necessary documents using the button below. Supported formats include PDFs and Word documents.
               </p>
+
+              {/* Success message */}
+              {successMessage && (
+                <p className="mt-3 text-success" data-aos="fade-up" data-aos-delay="500">
+                  {successMessage}
+                </p>
+              )}
 
               <div className="file-input" data-aos="fade-up" data-aos-delay="300">
                 <input
@@ -92,12 +102,15 @@ const DocumentUpload = () => {
                 Upload Document
               </button>
 
+              {/* Error message */}
               {errorMessage && (
                 <p className="mt-3 text-danger" data-aos="fade-up" data-aos-delay="500">
                   {errorMessage}
                 </p>
               )}
-              
+
+
+              {/* Selected file name */}
               {selectedFile && (
                 <p className="mt-3" data-aos="fade-up" data-aos-delay="500">
                   Selected file: {selectedFile.name}
