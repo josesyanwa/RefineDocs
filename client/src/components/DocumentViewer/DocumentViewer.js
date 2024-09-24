@@ -83,7 +83,7 @@ const DocumentViewer = () => {
               <div className="col-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
                 <div className="document-section">
                   <h3>Original Document</h3>
-                  {error ? <p>Error: {error}</p> : <p>{originalDocument || "Loading original document..."}</p>}
+                  {error ? <p>{error}</p> : <p>{originalDocument || "Loading original document..."}</p>}
                 </div>
               </div>
 
@@ -91,7 +91,7 @@ const DocumentViewer = () => {
               <div className="col-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
                 <div className="document-section">
                   <h3>Improved Document</h3>
-                  {error ? <p>Error: {error}</p> : <p>{improvedDocument || "Loading improved document..."}</p>}
+                  {error ? <p>{error}</p> : <p>{improvedDocument || "Loading improved document..."}</p>}
                 </div>
 
                 {/* Export Button */}
