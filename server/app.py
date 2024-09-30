@@ -17,7 +17,7 @@ from docx import Document as DocxDocument
 import io
 
 
-from models import db, User, Document, Suggestion, DocumentHistory
+from models import db, User, Document, Suggestion, DocumentHistory, StopWord, Word
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -160,18 +160,28 @@ def improve_document(original_content):
     # Process the text through the NLP pipeline
     doc = nlp(original_content)
     
-    # Improve the document content (for simplicity, this example returns the original)
+    # Improved content (initially the same as original content)
     improved_content = original_content
     
     # Example of extracting suggestions
     suggestions = []
     for token in doc:
         if token.is_stop:
-            suggestions.append(f"Consider removing stopword: {token.text}")
+            suggestions.append({
+                "suggestion_text": f"Consider removing stopword: {token.text}",
+                "original_word": token.text,  # Track the word being targeted
+                "suggestion_type": "remove_stopword"
+            })
         elif token.is_alpha and len(token.text) > 6:  # Example of a rule to improve word usage
-            suggestions.append(f"Try simplifying: {token.text}")
-    
+            suggestions.append({
+                "suggestion_text": f"Try simplifying: {token.text}",
+                "original_word": token.text,  # Track the complex word
+                "suggested_word": token.lemma_,  # Example: use lemma or another simpler word
+                "suggestion_type": "simplify_word"
+            })
+
     return improved_content, suggestions
+
 
 
 # POST DOCUMENT
@@ -224,10 +234,13 @@ def upload_document():
         db.session.commit()
 
         # Add each suggestion to the suggestions table
-        for suggestion_text in suggestions:
+        for suggestion_data in suggestions:
             new_suggestion = Suggestion(
                 document_id=new_document.id,
-                suggestion_text=suggestion_text,
+                suggestion_text=suggestion_data['suggestion_text'],  # Only the suggestion text
+                original_word=suggestion_data.get('original_word', None),  # Store the original word
+                suggested_word=suggestion_data.get('suggested_word', None),  # Store the suggested word
+                suggestion_type=suggestion_data.get('suggestion_type', None),  # Store suggestion type
                 is_accepted=False  # Default to not accepted
             )
             db.session.add(new_suggestion)
@@ -299,31 +312,47 @@ def get_document_suggestions(document_id):
 @app.route('/suggestions/accept/<int:suggestion_id>', methods=['POST'])
 @jwt_required()
 def accept_suggestion(suggestion_id):
-    # Get the suggestion
-    suggestion = Suggestion.query.get(suggestion_id)
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
 
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    # Fetch the suggestion
+    suggestion = Suggestion.query.get(suggestion_id)
     if not suggestion:
         return jsonify({'error': 'Suggestion not found'}), 404
 
-    # Find the related document
+    # Fetch the related document
     document = Document.query.get(suggestion.document_id)
     if not document:
         return jsonify({'error': 'Document not found'}), 404
 
-    # Modify the improved_content by applying the suggestion
-    # This can vary based on how suggestions modify the text. Here, we'll append the suggestion text to the document content as an example.
-    document.improved_content += f"\n{suggestion.suggestion_text}"
+    improved_content = document.improved_content
 
-    # Mark the suggestion as accepted
+    # Handle suggestion based on its type
+    if suggestion.suggestion_type == 'simplify_word':
+        # Replace the original word with the suggested word in the improved content
+        if suggestion.original_word and suggestion.suggested_word:
+            improved_content = improved_content.replace(suggestion.original_word, suggestion.suggested_word)
+    elif suggestion.suggestion_type == 'remove_stopword':
+        # Remove the stopword from the improved content
+        if suggestion.original_word:
+            improved_content = improved_content.replace(suggestion.original_word, '')
+
+    # Update the document's improved content and mark the suggestion as accepted
+    document.improved_content = improved_content.strip()  # Strip to remove any extra spaces from removing stopwords
     suggestion.is_accepted = True
 
-    # Commit the changes to the database
-    db.session.commit()
-
-    return jsonify({
-        'message': 'Suggestion accepted and applied to the document',
-        'improved_content': document.improved_content
-    }), 200
+    try:
+        db.session.commit()
+        return jsonify({
+            'message': 'Suggestion accepted and applied successfully',
+            'updated_improved_content': improved_content
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to accept suggestion: {str(e)}'}), 500
 
 
 # DENY SUGGESTION

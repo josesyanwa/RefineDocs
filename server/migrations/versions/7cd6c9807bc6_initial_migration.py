@@ -1,8 +1,8 @@
-"""Initial Migration
+"""initial migration
 
-Revision ID: 908a86dd1291
+Revision ID: 7cd6c9807bc6
 Revises: 
-Create Date: 2024-09-17 14:09:07.684434
+Create Date: 2024-09-29 15:17:29.918025
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '908a86dd1291'
+revision = '7cd6c9807bc6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,10 +31,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('upload_date', sa.DateTime(), nullable=False),
-    sa.Column('status', sa.String(length=20), nullable=False),
     sa.Column('original_content', sa.Text(), nullable=False),
     sa.Column('improved_content', sa.Text(), nullable=True),
-    sa.Column('suggestions', sa.Text(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -51,6 +49,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('document_id', sa.Integer(), nullable=False),
     sa.Column('suggestion_text', sa.Text(), nullable=False),
+    sa.Column('original_word', sa.String(), nullable=True),
+    sa.Column('suggested_word', sa.String(), nullable=True),
+    sa.Column('suggestion_type', sa.String(), nullable=True),
     sa.Column('is_accepted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['document_id'], ['documents.id'], ),
     sa.PrimaryKeyConstraint('id')

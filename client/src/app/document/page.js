@@ -15,7 +15,7 @@ const Document = () => {
         <div className="container">
           <div className="row align-items-center justify-content-start">
             <div className="col-lg-5">
-              <h1 className="headings" data-aos="fade-up">Upload & View Documents</h1>
+              <h1 className="headings" data-aos="fade-up">Upload & View Documents And Accept & Deny Suggestions</h1>
               <p className="mb-5" data-aos="fade-up">Refine. Improve. Perfect Your Documents Using RefineDocs</p>
               
                                                           
